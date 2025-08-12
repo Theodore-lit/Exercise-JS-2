@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace mini projet</title>
+</head>
+<body>
+
+    <h1>Gestion des employés d'une société</h1>
+
+    <section>
+        <h3>Un emploi de temps dynamique pour les employés notre société</h3> 
+        <div>
+            <p>Ici, vous allez inscrire un jour de la semaine et le département de service voulu et ausitôt vous aurez les noms des employés de ce département travaillant ce jour de la semaine</p>
+            <label for="jour">Jour : <input type="text" id="jour"></label> <br> <br>
+            <label for="service">Département : <input type="text" id="service"></label>
+        </div>
+        <div id = 'promotion'><h2>Vous êtes sur la page du zéro. Revnez plustard pour qu'on manipule le DOM ensenmble </h2></div>
+    </section>
+    
+    <script>
+        // Un tableau d'objet montrant les informations de tous nos employés
+        let employe = [
+            {   nom : 'François',
+                poste : ' Expert en cybersécurité',
+                anciennete : 2,
+                salaire : 200000,
+                service : 'securite',
+                jourDeTravail : 'vendredi'
+            },
+            {   nom : 'Pierre',
+                poste : 'chef projet',
+                anciennete : 5,
+                salaire : 250000,
+                service : 'dev',
+                jourDeTravail : 'lundi'
+            },
+            {   nom : 'Victoire',
+                poste : 'dev back',
+                anciennete : 1,
+                salaire : 80000,
+                service : 'dev',
+                jourDeTravail : 'mercredi'
+            },
+            {   nom : 'Albert',
+                poste : 'hacher ethique',
+                anciennete : 9,
+                salaire : 150000,
+                service : 'securite',
+                jourDeTravail : 'mardi'
+            },
+            {   nom : 'Prince',
+                poste : 'stagiaire',
+                anciennete : 0.3,
+                salaire : 70000,
+                service : 'devOps',
+                jourDeTravail : 'jeudi'
+            },
+            {   nom : 'Regis',
+                poste : 'hacker ethique',
+                anciennete : 3,
+                salaire : 200000,
+                service : 'securite',
+                jourDeTravail : 'mercredi'
+            },
+            {   nom : 'Theodore',
+                poste : 'dev fullstack',
+                anciennete : 6,
+                salaire : 300000,
+                service : 'dev',
+                jourDeTravail : 'mercredi'
+            },
+            {   nom : 'Vianney',
+                poste : 'dev IA',
+                anciennete : 3,
+                salaire : 200000,
+                service : 'dev',
+                jourDeTravail : 'jeudi'
+            },
+            {   nom : 'Robert',
+                poste : 'Consultant en cybersécurité',
+                anciennete : 7,
+                salaire : 170000,
+                service : 'securite',
+                jourDeTravail : 'lundi'
+            },
+            {   nom : 'Géoffroy',
+                poste : 'cloud ingenieur',
+                anciennete : 5,
+                salaire : 100000,
+                service : 'devOps',
+                jourDeTravail : 'mardi'
+            },
+            {   nom : 'Romaric',
+                poste : 'dev front',
+                anciennete : 2,
+                salaire : 160000,
+                service : 'dev',
+                jourDeTravail : 'lundi'
+            },
+            {   nom : 'Richard',
+                poste : 'cloud architecte',
+                anciennete : 3,
+                salaire : 95000,
+                service : 'devOps',
+                jourDeTravail : 'mercredi'
+            },
+            {   nom : 'Fredy',
+                poste : 'dev fullstack',
+                anciennete : 3,
+                salaire : 95000,
+                service : 'dev',
+                jourDeTravail : 'vendredi'
+            },
+        ];
+        // affichons une liste des employés par jour de travail et filtrer par service
+        function emploiDeTemps(jour,departement) {
+            let travailleurDuJour = [];
+            let travailleurDuJourService = [];
+            for (i= 0; i<employe.length;i++ ) {
+                if(employe[i].jourDeTravail == jour && departement == employe[i].service) {
+                    travailleurDuJourService.push(employe[i].nom)
+                } else if (employe[i].jourDeTravail == jour && departement == null) {
+                    travailleurDuJour.push(employe[i].nom)
+                } 
+            };
+            
+            return travailleurDuJourService;
+            return travailleurDuJour
+        };
+        console.log(emploiDeTemps('lundi', 'dev'));
+
+        // Augmenter les salaires selon l'ancienneté et changer de poste ou de service //
+
+        // Pour une une ancienneté supérieur ou égale à 3ans, augmentons le salaire de 50 mille. Les dev avec une ancienneté de 6ans deviendront des devOps et 
+        // tous ceux qui sont d'encienneté 7 seront des chefs projet de leur service
+        let afterPromotion = [];
+        for (i=0; i < employe.length; i++) {
+            if (employe[i].anciennete >= 5) {
+                employe[i].salaire = employe[i].salaire + 50000;
+            };
+            if (employe[i].anciennete >= 6 && employe[i].service == 'dev') {
+                employe[i].service = 'devOps'
+            };
+            if ( employe[i].anciennete >= 7 && employe[i].poste !== 'chef projet' ) {
+                employe[i].poste = 'chef projet'
+            }
+            afterPromotion.push(employe[i]);
+        };
+        employe = afterPromotion;
+        console.log("Après la promotion dernière; voici le résultat qui en découle " , employe);
+        
+        // Générer un résumé par service : total d'employé, moyenne de salaire, ancienneté //
+        let serviceEmploye = []
+        let totalEmploye = 0;
+        let sommeSalaire = 0;
+        let moyenneSalaire = 0;
+        let maxAnciennete = 0;
+        function resumeService (service) {
+            for (i= 0; i <employe.length; i++) {
+                if (employe[i].service == service) {
+                    serviceEmploye.push(employe[i].nom);
+                    sommeSalaire = sommeSalaire + employe[i].salaire
+                };
+                if (employe[i].service == service && maxAnciennete < employe[i].anciennete) {
+                    maxAncienneteNom = employe[i].nom
+                    maxAnciennete = employe[i].anciennete
+                }
+            }
+            totalEmploye = serviceEmploye.length;
+            moyenneSalaire = sommeSalaire/totalEmploye;
+            return ` Dans le service ${service}, nous avons ${totalEmploye} employé(s) avec une moyenne de ${moyenneSalaire} comme salaire. Le plus ancien du service est ${maxAncienneteNom} avec une expérience de ${maxAnciennete} an(s) `
+        };
+        console.log(resumeService('dev'));
+
+
+        // Ajouter automatiquement un employé à un service selon des critères (ex : manque de personnel).//
+        // En raison du manque de personel  de cybersécurite; un recrutement a été fait
+        function recrutement (nomNouveau, PosteNouveau){
+            employe.push({nom : nomNouveau, poste : PosteNouveau, anciennete : 0, salaire : ' ' , service : 'securite' }) ;
+        };
+        recrutement('jonas', 'architecte en cybersecurite');
+        
+    </script>
+</body>
+</html>
